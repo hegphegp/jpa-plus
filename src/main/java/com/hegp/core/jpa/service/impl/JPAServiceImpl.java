@@ -21,23 +21,26 @@ public class JPAServiceImpl<T, ID> implements JPAService<T, ID>, ApplicationCont
     public SimpleJpaRepository<T, ID> simpleJpaRepository;
     public ApplicationContext applicationContext;
     public Class entityClazz;
+
+    /**
+     * 通过 applicationContext 对象, 获取所有的jpa的实体类, 然后手动new SimpleJpaRepository()对象
+     * @param applicationContext
+     * @throws BeansException
+     */
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        /**
-        String[] ret=applicationContext.getBeanDefinitionNames();
-        for(String curr:ret){
-            System.out.println(curr);
-        }
-         */
         this.applicationContext = applicationContext;
         synchronized (JPAServiceImpl.class) {
             if (simpleJpaRepositoryMap.size()==0) {
                 Map<String, EntityManager> map = applicationContext.getBeansOfType(EntityManager.class);
                 for (String key : map.keySet()) {
-                    Set<EntityType<?>> set = map.get(key).getMetamodel().getEntities();
+                    EntityManager em = map.get(key);
+                    // 获取jpa的实体类
+                    Set<EntityType<?>> set = em.getMetamodel().getEntities();
                     for (EntityType entityType : set) {
-                        entityManagerMap.put(entityType.getJavaType(), map.get(key));
-                        simpleJpaRepositoryMap.put(entityType.getJavaType(), new SimpleJpaRepository(entityType.getJavaType(), map.get(key)));
+                        Class entityClass = entityType.getJavaType();
+                        entityManagerMap.put(entityClass, em);
+                        simpleJpaRepositoryMap.put(entityType.getJavaType(), new SimpleJpaRepository(entityClass, em));
                     }
                 }
             }
