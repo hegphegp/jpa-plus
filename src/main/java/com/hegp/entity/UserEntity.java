@@ -1,9 +1,9 @@
 package com.hegp.entity;
 
-import com.hegp.core.jpa.entity.IdEntity;
-import javax.persistence.Entity;
-import javax.persistence.Index;
-import javax.persistence.Table;
+import org.hibernate.annotations.GenericGenerator;
+
+import javax.persistence.*;
+import java.sql.Timestamp;
 
 @Entity
 @Table(name = "sys_user",
@@ -11,12 +11,27 @@ import javax.persistence.Table;
                   @Index(name="sys_user_del_index", columnList = "del", unique=false),
                   @Index(name="sys_user_create_at_index", columnList = "createAt", unique=false),
                   @Index(name="sys_user_update_at_index", columnList = "updateAt", unique=false)})
-public class UserEntity extends IdEntity {
+public class UserEntity {
+    @Id
+    @GenericGenerator(name = "system-uuid", strategy = "uuid")
+    @GeneratedValue(generator = "system-uuid")
+    @Column(length = 32)
+    private String id;
     private String username;
     private String nickname;
     private String phone;
     private Boolean del;
+    private Timestamp createAt;
+    private Timestamp updateAt;
     public UserEntity() { }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getUsername() {
         return username;
@@ -50,4 +65,19 @@ public class UserEntity extends IdEntity {
         this.del = del;
     }
 
+    public Timestamp getCreateAt() {
+        return createAt;
+    }
+
+    public void setCreateAt(Timestamp createAt) {
+        this.createAt = createAt;
+    }
+
+    public Timestamp getUpdateAt() {
+        return updateAt;
+    }
+
+    public void setUpdateAt(Timestamp updateAt) {
+        this.updateAt = updateAt;
+    }
 }

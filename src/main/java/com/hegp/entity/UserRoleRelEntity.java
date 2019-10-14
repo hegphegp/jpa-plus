@@ -1,20 +1,34 @@
 package com.hegp.entity;
 
-import com.hegp.core.jpa.entity.BaseEntity;
+import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Entity;
-import javax.persistence.Index;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.sql.Timestamp;
 
 @Entity
 @Table(name = "sys_user_role_rel",
        indexes = {@Index(name="sys_user_role_rel_user_id_index", columnList = "userId", unique=false),
                   @Index(name="sys_user_role_rel_role_id_index", columnList = "roleId", unique=false)})
-public class UserRoleRelEntity extends BaseEntity {
+public class UserRoleRelEntity {
+    @Id
+    @GenericGenerator(name = "system-uuid", strategy = "uuid")
+    @GeneratedValue(generator = "system-uuid")
+    @Column(length = 32)
+    private String id;
     private String userId;
     private String roleId;
+    private Timestamp createAt;
+    private Timestamp updateAt;
 
     public UserRoleRelEntity() { }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getUserId() {
         return userId;
@@ -30,5 +44,21 @@ public class UserRoleRelEntity extends BaseEntity {
 
     public void setRoleId(String roleId) {
         this.roleId = roleId;
+    }
+
+    public Timestamp getCreateAt() {
+        return createAt;
+    }
+
+    public void setCreateAt(Timestamp createAt) {
+        this.createAt = createAt;
+    }
+
+    public Timestamp getUpdateAt() {
+        return updateAt;
+    }
+
+    public void setUpdateAt(Timestamp updateAt) {
+        this.updateAt = updateAt;
     }
 }
