@@ -10,7 +10,9 @@ import java.util.List;
 import java.util.Map;
 
 public interface JPAService<T, ID> {
+    // 保存所有的jpa实体类与EntityManager的对应关系
     Map<Class, EntityManager> entityManagerMap = new HashMap<>();
+    // 保存所有的jpa实体类与SimpleJpaRepository的对应关系
     Map<Class, SimpleJpaRepository> simpleJpaRepositoryMap = new HashMap<>();
 
     T find(ID id);
